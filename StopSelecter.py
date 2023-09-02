@@ -30,16 +30,13 @@ class StopSelecter():
                 stops_data = json.load(stops)
             for stop_name in stops_data:
                 if stop_name["stopName"] == user_stop_name:
-                    print(f"Przystanek: {stop_name['stopName']}")
-                    print(f"ID: {stop_name['stopId']}")
-                    print(f"Zona: {stop_name['zoneId']}")
                     key_error = False                                        
                     self.stop_data =  {
                         "stopName": stop_name['stopName'],
                         "stopId": stop_name['stopId'],
                         "zoneId": stop_name['zoneId']
                     }
-                    return self.stop_data
+                    return
             print("Nie znalezniono przystanku. Spróbuj ponownie")
                 
 
