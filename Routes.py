@@ -8,7 +8,7 @@ class Routes:
         self.routes = self.routes_list()
         self.route_data = {}
 
-    def routes_list(slef):
+    def routes_list(self):
         try:
             dowlonad_routes = requests.get(self.url_routes)
             if dowlonad_routes.status_code == 200:
@@ -23,7 +23,7 @@ class Routes:
             sys.exit(1)
 
     def get_route_data(self, route_id):
-        with open("routes_list", "r") as routes:
+        with open("routes_list.json", "r") as routes:
             routes_data = json.load(routes)
         for route in routes_data:
             if route["routeId"] == route_id:
