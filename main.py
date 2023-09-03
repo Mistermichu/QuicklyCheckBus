@@ -1,17 +1,18 @@
 from StopSelecter import StopSelecter
 from Routes import Routes
 from Delays import Delays
+from Trips import Trips
 
 
 URL_STOPS = "http://api.zdiz.gdynia.pl/pt/stops"
 URL_DELAYS = "http://api.zdiz.gdynia.pl/pt/delays?stopId={stop_id}"
 URL_ROUTES = "http://api.zdiz.gdynia.pl/pt/routes"
 URL_STOP_TIMES = "http://api.zdiz.gdynia.pl/pt/stop_times"
+URL_TRIPS = "http://api.zdiz.gdynia.pl/pt/trips"
 
 timeTable = {}
 
 stop = StopSelecter(URL_STOPS, URL_STOP_TIMES)
-routes = Routes(URL_ROUTES)
 
 
 #####
@@ -27,4 +28,4 @@ while run_app:
     stop.get_stop_data()
     stop.stop_time_table()
     timeTable = stop.timeTable
-    print(timeTable)
+    trips = Trips(URL_TRIPS)
