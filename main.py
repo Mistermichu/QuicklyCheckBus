@@ -6,24 +6,25 @@ from Delays import Delays
 URL_STOPS = "http://api.zdiz.gdynia.pl/pt/stops"
 URL_DELAYS = "http://api.zdiz.gdynia.pl/pt/delays?stopId={stop_id}"
 URL_ROUTES = "http://api.zdiz.gdynia.pl/pt/routes"
+URL_STOP_TIMES = "http://api.zdiz.gdynia.pl/pt/stop_times"
 
-stop = StopSelecter(URL_STOPS)
+timeTable = {}
+
+stop = StopSelecter(URL_STOPS, URL_STOP_TIMES)
 routes = Routes(URL_ROUTES)
+
+
+#####
+# 1 Pobieramy dane na temat dostępnych przystanków
+# 2 Pytamu użytkownika o wybrany przystanek
+# 3 Pobieramy tripId i deparureTime
+# 4 Ze zbioru trips pobieramu za pomocą tripId pobieramy kierunek i routeId
+# 5 Ze zbioru Rote pobieramy Route short name (numer linii)
 
 
 run_app = True
 while run_app:
     stop.get_stop_data()
-    delays = Delays(URL_DELAYS, stop.stop_data["stopId"])
-    print("*" * 50)
-    print(f"Ostatnia aktualizacja: {delays.delays['lastUpdate']}")
-    if len(delays.delays["delay"]) == 0:
-        print("Brak odjazdów")
-    else:
-        for line_data in delays.delays["delay"]:
-            routes.get_route_data(line_data["routeId"])
-            line_name = routes.route_data["routeShortName"]
-            destination = line_data["headsign"]
-            theoretical_time = line_data["theoreticalTime"]
-            estimated_time = line_data["estimatedTime"]
-            print(f"{line_name} {destination} Czas rozkładowy: {theoretical_time} Rzeczywisty czas przyjazdu: {estimated_time}")
+    stop.stop_time_table()
+    timeTable = stop.timeTable
+    print(timeTable)
