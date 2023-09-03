@@ -2,6 +2,7 @@ import requests
 import json
 import sys
 
+
 class Routes:
     def __init__(self, url_routes):
         self.url_routes = url_routes
@@ -27,8 +28,7 @@ class Routes:
             routes_data = json.load(routes)
         for route in routes_data:
             if route["routeId"] == route_id:
-                self.route_data = {
-                    "routeId": route_id,
+                self.route_data[route_id] = {
                     "routeShortName": route["routeShortName"]
                 }
                 return
