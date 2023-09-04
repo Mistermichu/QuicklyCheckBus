@@ -29,3 +29,17 @@ while run_app:
     stop.stop_time_table()
     timeTable = stop.timeTable
     trips = Trips(URL_TRIPS)
+    print(timeTable)
+    for trip_id, departure_time in timeTable.items():
+        for specific_trip in trips.trips:
+            if trip_id == specific_trip["tripId"]:
+                route_id = specific_trip["routeId"]
+                head_sign = specific_trip["tripHeadsign"]
+                timeTable[trip_id] = {
+                    "routeId": route_id,
+                    "tripHeadsign": head_sign,
+                    "departureTime": departure_time["departureTime"]
+                }
+                continue
+    print("*" * 50)
+    print(timeTable)
