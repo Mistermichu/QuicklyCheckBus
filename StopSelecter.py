@@ -1,5 +1,8 @@
 import json
 from Functions import download_data
+from Trips import Trips
+
+URL_TRIPS = "http://api.zdiz.gdynia.pl/pt/trips"
 
 
 class StopSelecter():
@@ -36,3 +39,14 @@ class StopSelecter():
                 self.timeTable[tripId] = {
                     "departureTime": departureTtime
                 }
+        trips = Trips(URL_TRIPS)
+        for trip_id, trip_data in self.timeTable.items():
+            for specific_trip_data in trips.list:
+                if trip_id == specific_trip_data["tripId"]:
+                    trip_data["routeId"] = specific_trip_data.get("routeId")
+                    trip_data["serviceId"] = specific_trip_data.get(
+                        "serviceId")
+                    trip_data["tripHeadsign"] = specific_trip_data.get(
+                        "tripHeadsign")
+                    trip_data["tripHeadsign"] = trip_data["tripHeadsign"][:-3]
+                    self.timeTable[trip_id] = trip_data
