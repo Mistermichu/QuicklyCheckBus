@@ -1,14 +1,22 @@
 from StopSelecter import StopSelecter
 from Routes import Routes
 from Delays import Delays
+from Trips import Trips
+from CalendarDates import CalendarDates
 
 
 URL_STOPS = "http://api.zdiz.gdynia.pl/pt/stops"
 URL_DELAYS = "http://api.zdiz.gdynia.pl/pt/delays?stopId={stop_id}"
 URL_ROUTES = "http://api.zdiz.gdynia.pl/pt/routes"
+URL_STOP_TIMES = "http://api.zdiz.gdynia.pl/pt/stop_times"
+URL_TRIPS = "http://api.zdiz.gdynia.pl/pt/trips"
+URL_CALENDAR_DATES = "http://api.zdiz.gdynia.pl/pt/calendar_dates"
 
-stop = StopSelecter(URL_STOPS)
+
+stop = StopSelecter(URL_STOPS, URL_STOP_TIMES)
 routes = Routes(URL_ROUTES)
+trips = Trips(URL_TRIPS)
+calendar_dates = CalendarDates(URL_CALENDAR_DATES)
 
 
 run_app = True
@@ -27,3 +35,5 @@ while run_app:
             theoretical_time = line_data["theoreticalTime"]
             estimated_time = line_data["estimatedTime"]
             print(f"{line_name} {destination} Czas rozkładowy: {theoretical_time} Rzeczywisty czas przyjazdu: {estimated_time}")
+    stop.stop_time_table()
+    print(stop.timeTable)

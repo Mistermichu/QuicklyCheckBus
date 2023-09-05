@@ -2,6 +2,7 @@ import requests
 import json
 import sys
 
+
 class Routes:
     def __init__(self, url_routes):
         self.url_routes = url_routes
