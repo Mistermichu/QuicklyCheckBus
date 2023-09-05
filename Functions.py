@@ -2,8 +2,6 @@ import requests
 import json
 import sys
 
-# Data Downloader  :)
-
 
 def download_data(url, file_name):
     try:
@@ -18,3 +16,9 @@ def download_data(url, file_name):
     except Exception as error:
         print("Wystąpił błąd pobierania danych", str(error))
         sys.exit(1)
+
+
+def assign_data(file_name):
+    with open(file_name, "r") as data_list:
+        file_data = json.load(data_list)
+    return file_data

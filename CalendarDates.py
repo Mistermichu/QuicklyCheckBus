@@ -1,24 +1,8 @@
-import requests
-import json
-import sys
+from Functions import download_data, assign_data
 
 
 class CalendarDates:
     def __init__(self, url_calendar_dates):
-        self.url_calendar_dates = url_calendar_dates
-        self.dates = self.dates_list()
-
-    def dates_list(self):
-        try:
-            dowlonad_dates = requests.get(self.url_calendar_dates)
-            if dowlonad_dates.status_code == 200:
-                dates_data = dowlonad_dates.json()
-                with open("dates_list.json", "w") as dates:
-                    json.dump(dates_data, dates)
-                    return dates_data
-            else:
-                print("Błąd pobierania danych")
-                sys.exit(1)
-        except Exception as error:
-            print("Wystąpił błąd pobierania danych", str(error))
-            sys.exit(1)
+        file_name = "dates_list.json"
+        download_data(url_calendar_dates, file_name)
+        self.list = assign_data(file_name)

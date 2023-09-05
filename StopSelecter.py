@@ -1,8 +1,13 @@
 import json
+import datetime
 from Functions import download_data
 from Trips import Trips
+from CalendarDates import CalendarDates
+from Routes import Routes
 
 URL_TRIPS = "http://api.zdiz.gdynia.pl/pt/trips"
+URL_CALENDAR_DATES = "http://api.zdiz.gdynia.pl/pt/calendar_dates"
+URL_ROUTES = "http://api.zdiz.gdynia.pl/pt/routes"
 
 
 class StopSelecter():
@@ -50,3 +55,28 @@ class StopSelecter():
                         "tripHeadsign")
                     trip_data["tripHeadsign"] = trip_data["tripHeadsign"][:-3]
                     self.timeTable[trip_id] = trip_data
+        calendar_date = CalendarDates(URL_CALENDAR_DATES)
+        today = str(datetime.date.today()).replace("-", "")
+        trip_to_remove = []
+        for trip_id, trip_data in self.timeTable.items():
+            service_id = trip_data.get("serviceId")
+            trip_in_service = False
+            for calendar_trips in calendar_date.list:
+                id = calendar_trips.get("serviceId")
+                if service_id == id:
+                    service_day = calendar_trips.get("date")
+                    if today == service_day:
+                        trip_in_service = True
+            if not trip_in_service:
+                trip_to_remove.append(trip_id)
+        print(f"Kursy do usunięcia: {trip_to_remove}")
+        for id_to_remove in trip_to_remove:
+            del self.timeTable[id_to_remove]
+        routes = Routes(URL_ROUTES)
+        for trip_id, trip_data in self.timeTable.items():
+            route_id = trip_data.get("routeId")
+            for route_data in routes.list:
+                route_data_id = route_data.get("routeId")
+                if route_id == route_data_id:
+                    route_short_name = route_data.get("routeShortName")
+                    trip_data["routeShortName"] = route_short_name
