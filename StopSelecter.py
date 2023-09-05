@@ -35,6 +35,7 @@ class StopSelecter():
             print("Nie znalezniono przystanku. Spróbuj ponownie")
 
     def stop_time_table(self):
+        self.timeTable = {}
         with open("stop_times_list.json", "r") as stop_time_table:
             time_table = json.load(stop_time_table)
         for departure in time_table:
@@ -69,7 +70,6 @@ class StopSelecter():
                         trip_in_service = True
             if not trip_in_service:
                 trip_to_remove.append(trip_id)
-        print(f"Kursy do usunięcia: {trip_to_remove}")
         for id_to_remove in trip_to_remove:
             del self.timeTable[id_to_remove]
         routes = Routes(URL_ROUTES)
