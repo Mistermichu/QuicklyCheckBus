@@ -4,10 +4,12 @@ from Functions import download_data
 from Trips import Trips
 from CalendarDates import CalendarDates
 from Routes import Routes
+from Delays import Delays
 
 URL_TRIPS = "http://api.zdiz.gdynia.pl/pt/trips"
 URL_CALENDAR_DATES = "http://api.zdiz.gdynia.pl/pt/calendar_dates"
 URL_ROUTES = "http://api.zdiz.gdynia.pl/pt/routes"
+URL_DELAYS = "http://api.zdiz.gdynia.pl/pt/delays?stopId={stop_id}"
 
 
 class StopSelecter():
@@ -16,6 +18,7 @@ class StopSelecter():
         download_data(url_stop_times, "stop_times_list.json")
         self.stop_data = {}
         self.timeTable = {}
+        self.updateTime = None
 
     def get_stop_data(self):
         key_error = True
@@ -35,6 +38,7 @@ class StopSelecter():
             print("Nie znalezniono przystanku. Spróbuj ponownie")
 
     def stop_time_table(self):
+        # Downlad full Time Table for selected stop
         self.timeTable = {}
         with open("stop_times_list.json", "r") as stop_time_table:
             time_table = json.load(stop_time_table)
@@ -45,7 +49,7 @@ class StopSelecter():
                 self.timeTable[tripId] = {
                     "departureTime": departureTtime
                 }
-
+        # Exclude all passed departures and departures later than 1h
         time_now = datetime.datetime.now()
         time_plus_hour = time_now + datetime.timedelta(hours=1)
         time_now = str(time_now.strftime("%H:%M:%S"))
@@ -57,7 +61,7 @@ class StopSelecter():
                 trip_to_remove.append(trip_id)
         for id_to_remove in trip_to_remove:
             del self.timeTable[id_to_remove]
-
+        # Assign routeID, serviceId, tripHeadsign
         trips = Trips(URL_TRIPS)
         for trip_id, trip_data in self.timeTable.items():
             for specific_trip_data in trips.list:
@@ -69,7 +73,7 @@ class StopSelecter():
                         "tripHeadsign")
                     trip_data["tripHeadsign"] = trip_data["tripHeadsign"][:-3]
                     self.timeTable[trip_id] = trip_data
-
+        # Exclude all trips not in service on specific day
         calendar_date = CalendarDates(URL_CALENDAR_DATES)
         today = str(datetime.date.today()).replace("-", "")
         trip_to_remove = []
@@ -86,7 +90,7 @@ class StopSelecter():
                 trip_to_remove.append(trip_id)
         for id_to_remove in trip_to_remove:
             del self.timeTable[id_to_remove]
-
+        # Get routeShortName
         routes = Routes(URL_ROUTES)
         for trip_id, trip_data in self.timeTable.items():
             route_id = trip_data.get("routeId")
@@ -95,3 +99,11 @@ class StopSelecter():
                 if route_id == route_data_id:
                     route_short_name = route_data.get("routeShortName")
                     trip_data["routeShortName"] = route_short_name
+        # Assign current delays data
+        delays = Delays(URL_DELAYS, self.stop_data["stopId"])
+        self.updateTime = delays.list["lastUpdate"]
+        for trip_id, trip_data in self.timeTable.items():
+            route_id = trip_data.get("routeId")
+            departure_time = trip_data.get("departureTime")
+            delays.get_delay_data(route_id, departure_time,
+                                  trip_data, self.timeTable, trip_id)
