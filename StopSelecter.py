@@ -45,6 +45,19 @@ class StopSelecter():
                 self.timeTable[tripId] = {
                     "departureTime": departureTtime
                 }
+
+        time_now = datetime.datetime.now()
+        time_plus_hour = time_now + datetime.timedelta(hours=1)
+        time_now = str(time_now.strftime("%H:%M:%S"))
+        time_plus_hour = str(time_plus_hour.strftime("%H:%M:%S"))
+        trip_to_remove = []
+        for trip_id, trip_data in self.timeTable.items():
+            departure_time = trip_data.get("departureTime")
+            if time_now > departure_time or departure_time > time_plus_hour:
+                trip_to_remove.append(trip_id)
+        for id_to_remove in trip_to_remove:
+            del self.timeTable[id_to_remove]
+
         trips = Trips(URL_TRIPS)
         for trip_id, trip_data in self.timeTable.items():
             for specific_trip_data in trips.list:
@@ -56,6 +69,7 @@ class StopSelecter():
                         "tripHeadsign")
                     trip_data["tripHeadsign"] = trip_data["tripHeadsign"][:-3]
                     self.timeTable[trip_id] = trip_data
+
         calendar_date = CalendarDates(URL_CALENDAR_DATES)
         today = str(datetime.date.today()).replace("-", "")
         trip_to_remove = []
@@ -72,6 +86,7 @@ class StopSelecter():
                 trip_to_remove.append(trip_id)
         for id_to_remove in trip_to_remove:
             del self.timeTable[id_to_remove]
+
         routes = Routes(URL_ROUTES)
         for trip_id, trip_data in self.timeTable.items():
             route_id = trip_data.get("routeId")
