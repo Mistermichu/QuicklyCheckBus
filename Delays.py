@@ -36,11 +36,11 @@ class Delays:
 
             hour, minute, second = map(int, delay_estimated.split(':'))
             delay_estimated = today.replace(
-                hour=hour, minute=minute, second=second)
+                hour=hour, minute=minute, second=second, microsecond=0)
 
             hour, minute, second = map(int, delay_departure.split(':'))
             delay_departure = today.replace(
-                hour=hour, minute=minute, second=second)
+                hour=hour, minute=minute, second=second, microsecond=0)
 
             delay_vehicle = delay_data.get("vehicleCode")
             if route_id == delay_route_id and departure_time == delay_departure:
