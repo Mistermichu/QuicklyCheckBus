@@ -1,18 +1,20 @@
 from datetime import datetime, timedelta
 
 
-def convert_time(time_table):
+def convert_time(time_table, key):
     for trip_id, trip_data in time_table.items():
-        departure_time = trip_data.get("departureTime")
-        if departure_time >= "24:00:00":
-            hour, minute, second = map(int, departure_time.split(':'))
+        departure_time = trip_data.get(key)
+        hour, minute, second = map(int, departure_time.split(':'))
+        if hour >= 24:
             hour -= 24
-            one_hour = timedelta(hours=1)
-            time_now = datetime.strptime(
-                f"{hour}:{minute}:{second}", "%H:%M:%S")
-            if time_now >= datetime(1900, 1, 1, 0, 0, 0) + one_hour:
-                time_now -= one_hour
-            converted_time = time_now.strftime("%H:%M:%S")
-            departure_time = str(converted_time)
-            trip_data["departureTime"] = departure_time
-            time_table[trip_id] = trip_data
+            today = datetime.today()
+            day_delta = timedelta(days=1)
+            today += day_delta
+            departure_time = today.replace(
+                hour=hour, minute=minute, second=second)
+        else:
+            today = datetime.today()
+            departure_time = today.replace(
+                hour=hour, minute=minute, second=second)
+        trip_data[key] = departure_time
+        time_table[trip_id] = trip_data

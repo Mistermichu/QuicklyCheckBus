@@ -10,9 +10,7 @@ run_app = True
 while run_app:
     stop.get_stop_data()
     stop.stop_time_table()
-    time_table = dict(sorted(stop.timeTable.items(),
-                      key=lambda item: item[1]["departureTime"]))
-    for trip_id, trip_data in time_table.items():
+    for trip_id, trip_data in stop.timeTable.items():
         if len(trip_data) == 5:
             print("*" * 20)
             print("*KURS NIEZALOGOWANY*")

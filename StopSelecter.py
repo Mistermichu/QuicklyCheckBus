@@ -1,5 +1,5 @@
 import json
-from Functions import download_data, exclude_trips
+from Functions import download_data, exclude_trips, exclude_trips_2, time_to_string
 from TimeConverter import convert_time
 from Trips import Trips
 from CalendarDates import CalendarDates
@@ -51,8 +51,7 @@ class StopSelecter():
                 self.timeTable[tripId] = {
                     "departureTime": departureTtime
                 }
-        # Exclude all passed departures and departures later than 1h
-        exclude_trips(self.timeTable)
+        # Removed function for exclude_trips
         # Assign routeID, serviceId, tripHeadsign
         trips = Trips(URL_TRIPS)
         for trip_id, trip_data in self.timeTable.items():
@@ -69,11 +68,13 @@ class StopSelecter():
         calendar_date = CalendarDates(URL_CALENDAR_DATES)
         today = datetime.date.today()
         yesterday = today - datetime.timedelta(days=1)
+        tomorrow = today + datetime.timedelta(days=1)
         today = str(today).replace("-", "")
         yesterday = str(yesterday).replace("-", "")
         trip_to_remove = []
         for trip_id, trip_data in self.timeTable.items():
             service_id = trip_data.get("serviceId")
+            departure_time = trip_data.get("departureTime")
             trip_in_service = False
             for calendar_trips in calendar_date.list:
                 id = calendar_trips.get("serviceId")
@@ -82,17 +83,27 @@ class StopSelecter():
                     if today == service_day:
                         trip_in_service = True
                     elif yesterday == service_day:
-                        departure_time = trip_data.get("departureTime")
                         if departure_time >= "24:00:00":
+                            trip_in_service = True
+                    elif tomorrow == service_day:
+                        if departure_time < "01:00:00":
                             trip_in_service = True
             if not trip_in_service:
                 trip_to_remove.append(trip_id)
         for id_to_remove in trip_to_remove:
             del self.timeTable[id_to_remove]
         # Convert Time
-        convert_time(self.timeTable)
+        convert_time(self.timeTable, "departureTime")
+        # Assign current delays data
+        delays = Delays(URL_DELAYS, self.stop_data["stopId"])
+        self.updateTime = delays.list["lastUpdate"]
+        for trip_id, trip_data in self.timeTable.items():
+            route_id = trip_data.get("routeId")
+            departure_time = trip_data.get("departureTime")
+            delays.get_delay_data(route_id, departure_time,
+                                  trip_data, self.timeTable, trip_id)
         # Exclude all passed departures and departures later than 1h after time convert
-        exclude_trips(self.timeTable)
+        exclude_trips_2(self.timeTable)
         # Get routeShortName
         routes = Routes(URL_ROUTES)
         for trip_id, trip_data in self.timeTable.items():
@@ -102,11 +113,8 @@ class StopSelecter():
                 if route_id == route_data_id:
                     route_short_name = route_data.get("routeShortName")
                     trip_data["routeShortName"] = route_short_name
-        # Assign current delays data
-        delays = Delays(URL_DELAYS, self.stop_data["stopId"])
-        self.updateTime = delays.list["lastUpdate"]
-        for trip_id, trip_data in self.timeTable.items():
-            route_id = trip_data.get("routeId")
-            departure_time = trip_data.get("departureTime")
-            delays.get_delay_data(route_id, departure_time,
-                                  trip_data, self.timeTable, trip_id)
+        # Sort Time Table
+        self.timeTable = dict(sorted(self.timeTable.items(),
+                                     key=lambda item: item[1]["departureTime"]))
+        # Convert departure time to strin
+        time_to_string(self.timeTable)

@@ -1,6 +1,7 @@
 import requests
 import json
 import sys
+from datetime import datetime
 
 
 class Delays:
@@ -30,6 +31,17 @@ class Delays:
             delay_route_id = delay_data.get("routeId")
             delay_departure = delay_data.get("theoreticalTime") + ":00"
             delay_estimated = delay_data.get("estimatedTime") + ":00"
+
+            today = datetime.today()
+
+            hour, minute, second = map(int, delay_estimated.split(':'))
+            delay_estimated = today.replace(
+                hour=hour, minute=minute, second=second)
+
+            hour, minute, second = map(int, delay_departure.split(':'))
+            delay_departure = today.replace(
+                hour=hour, minute=minute, second=second)
+
             delay_vehicle = delay_data.get("vehicleCode")
             if route_id == delay_route_id and departure_time == delay_departure:
                 trip_data["estimatedTime"] = delay_estimated

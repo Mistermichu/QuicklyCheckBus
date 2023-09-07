@@ -8,12 +8,12 @@ time_2 = "12:00:00"
 check = time_1 > time_2
 print(check)
 
-time_now = datetime.datetime.now()
+time_now = datetime.datetime(2023, 9, 7, 23, 30, 0)
+time_minus_hour = time_now - datetime.timedelta(hours=1)
 time_plus_hour = time_now + datetime.timedelta(hours=1)
-time_now = str(time_now.strftime("%H:%M:%S"))
-time_plus_hour = str(time_plus_hour.strftime("%H:%M:%S"))
 print(time_now)
 print(time_plus_hour)
+print(time_minus_hour < time_now < time_plus_hour)
 
 '''
 for trip_id, trip_data in self.timeTable:
