@@ -7,7 +7,6 @@ def convert_time(time_table):
         if departure_time >= "24:00:00":
             hour, minute, second = map(int, departure_time.split(':'))
             hour -= 24
-            print(f"{hour}:{minute}:{second}")
             one_hour = timedelta(hours=1)
             time_now = datetime.strptime(
                 f"{hour}:{minute}:{second}", "%H:%M:%S")
