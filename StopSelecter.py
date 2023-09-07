@@ -1,10 +1,12 @@
 import json
-import datetime
-from Functions import download_data
+from Functions import download_data, exclude_trips
+from TimeConverter import convert_time
 from Trips import Trips
 from CalendarDates import CalendarDates
 from Routes import Routes
 from Delays import Delays
+import datetime
+
 
 URL_TRIPS = "http://api.zdiz.gdynia.pl/pt/trips"
 URL_CALENDAR_DATES = "http://api.zdiz.gdynia.pl/pt/calendar_dates"
@@ -50,17 +52,7 @@ class StopSelecter():
                     "departureTime": departureTtime
                 }
         # Exclude all passed departures and departures later than 1h
-        time_now = datetime.datetime.now()
-        time_plus_hour = time_now + datetime.timedelta(hours=1)
-        time_now = str(time_now.strftime("%H:%M:%S"))
-        time_plus_hour = str(time_plus_hour.strftime("%H:%M:%S"))
-        trip_to_remove = []
-        for trip_id, trip_data in self.timeTable.items():
-            departure_time = trip_data.get("departureTime")
-            if time_now > departure_time or departure_time > time_plus_hour:
-                trip_to_remove.append(trip_id)
-        for id_to_remove in trip_to_remove:
-            del self.timeTable[id_to_remove]
+        exclude_trips(self.timeTable)
         # Assign routeID, serviceId, tripHeadsign
         trips = Trips(URL_TRIPS)
         for trip_id, trip_data in self.timeTable.items():
@@ -75,7 +67,10 @@ class StopSelecter():
                     self.timeTable[trip_id] = trip_data
         # Exclude all trips not in service on specific day
         calendar_date = CalendarDates(URL_CALENDAR_DATES)
-        today = str(datetime.date.today()).replace("-", "")
+        today = datetime.date.today()
+        yesterday = today - datetime.timedelta(days=1)
+        today = str(today).replace("-", "")
+        yesterday = str(yesterday).replace("-", "")
         trip_to_remove = []
         for trip_id, trip_data in self.timeTable.items():
             service_id = trip_data.get("serviceId")
@@ -86,10 +81,18 @@ class StopSelecter():
                     service_day = calendar_trips.get("date")
                     if today == service_day:
                         trip_in_service = True
+                    elif yesterday == service_day:
+                        departure_time = trip_data.get("departureTime")
+                        if departure_time >= "24:00:00":
+                            trip_in_service = True
             if not trip_in_service:
                 trip_to_remove.append(trip_id)
         for id_to_remove in trip_to_remove:
             del self.timeTable[id_to_remove]
+        # Convert Time
+        convert_time(self.timeTable)
+        # Exclude all passed departures and departures later than 1h after time convert
+        exclude_trips(self.timeTable)
         # Get routeShortName
         routes = Routes(URL_ROUTES)
         for trip_id, trip_data in self.timeTable.items():
