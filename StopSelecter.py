@@ -1,5 +1,5 @@
 import json
-from Functions import download_data, exclude_trips, exclude_trips_2, time_to_string
+from Functions import download_data, exclude_trips, time_to_string
 from TimeConverter import convert_time
 from Trips import Trips
 from CalendarDates import CalendarDates
@@ -67,6 +67,9 @@ class StopSelecter():
         # Exclude all trips not in service on specific day
         calendar_date = CalendarDates(URL_CALENDAR_DATES)
         today = datetime.date.today()
+        '''
+        today = datetime.date.today() + datetime.timedelta(days=1)
+        '''
         yesterday = today - datetime.timedelta(days=1)
         tomorrow = today + datetime.timedelta(days=1)
         today = str(today).replace("-", "")
@@ -103,7 +106,7 @@ class StopSelecter():
             delays.get_delay_data(route_id, departure_time,
                                   trip_data, self.timeTable, trip_id)
         # Exclude all passed departures and departures later than 1h after time convert
-        exclude_trips_2(self.timeTable)
+        exclude_trips(self.timeTable)
         # Get routeShortName
         routes = Routes(URL_ROUTES)
         for trip_id, trip_data in self.timeTable.items():

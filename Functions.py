@@ -26,31 +26,10 @@ def assign_data(file_name):
 
 
 def exclude_trips(time_table):
-    '''
     time_now = datetime.datetime.now()
     '''
-    ###
-    time_now = datetime.datetime(2023, 9, 7, 00, 1, 0)
-    ###
-    time_plus_hour = time_now + datetime.timedelta(hours=1)
-    time_now = str(time_now.strftime("%H:%M:%S"))
-    time_plus_hour = str(time_plus_hour.strftime("%H:%M:%S"))
-    trip_to_remove = []
-    for trip_id, trip_data in time_table.items():
-        departure_time = trip_data.get("departureTime")
-        if departure_time >= "24:00:00":
-            continue
-        if time_now > departure_time or departure_time > time_plus_hour:
-            trip_to_remove.append(trip_id)
-    for id_to_remove in trip_to_remove:
-        del time_table[id_to_remove]
-
-
-def exclude_trips_2(time_table):
-    time_now = datetime.datetime.now()
-    '''
-    Inser specific time for testing:
-    time_now = datetime.datetime(2023, 9, 8, 00, 1, 0)
+    # Inser specific time for testing:
+    time_now = datetime.datetime(2023, 9, 9, 00, 30, 0)
     '''
     time_plus_hour = time_now + datetime.timedelta(hours=1)
     trip_to_remove = []
