@@ -1,5 +1,7 @@
 import datetime
 
+print("24:40:00" >= "24:00:00")
+
 today = str(datetime.date.today()).replace("-", "")
 print(today)
 

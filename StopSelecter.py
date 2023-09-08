@@ -117,4 +117,5 @@ class StopSelecter():
         self.timeTable = dict(sorted(self.timeTable.items(),
                                      key=lambda item: item[1]["departureTime"]))
         # Convert departure time to strin
-        time_to_string(self.timeTable)
+        time_to_string(self.timeTable, "departureTime")
+        time_to_string(self.timeTable, "estimatedTime")

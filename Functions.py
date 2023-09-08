@@ -65,9 +65,10 @@ def exclude_trips_2(time_table):
         del time_table[id_to_remove]
 
 
-def time_to_string(time_table):
+def time_to_string(time_table, time):
     for trip_id, trip_data in time_table.items():
-        departure_time = trip_data.get("departureTime")
-        departure_time = str(departure_time.strftime("%H:%M:%S"))
-        trip_data["departureTime"] = departure_time
-        time_table[trip_id] = trip_data
+        departure_time = trip_data.get(time)
+        if departure_time:
+            departure_time = str(departure_time.strftime("%H:%M:%S"))
+            trip_data[time] = departure_time
+            time_table[trip_id] = trip_data
