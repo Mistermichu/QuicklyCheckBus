@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Quickly Check Your Bus - Gdynia
+    </title>
+</head>
+
+<body>
+    <h1>
+        Rozkład Jazdy
+    </h1>
+    <ul>
+        {% for entry in result %}
+        <li>
+            {{entry.linia}} - {{entry.kierunek}} - - {{entry.planowany_odjazd}}
+            {%if entry.status %}
+            - {{entry.status}}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
