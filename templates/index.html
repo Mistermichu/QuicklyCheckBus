@@ -12,8 +12,8 @@
         Rozkład Jazdy
     </h1>
     <form method="POST" action="/">
-        <label for="przystanek">Wybierz przystanek:</label>
-        <select id="przystanek" name="przystanek">
+        <label for="selected_stop">Wybierz przystanek:</label>
+        <select id="selected_stop" name="selected_stop">
             {% for stop_name in stops %}
             <option value="{{ stop_name }}">{{ stop_name }}</option>
             {% endfor %}

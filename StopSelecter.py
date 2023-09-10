@@ -22,22 +22,17 @@ class StopSelecter():
         self.timeTable = {}
         self.updateTime = None
 
-    def get_stop_data(self):
-        key_error = True
-        while key_error:
-            user_stop_name = str(input("Podaj nazwę przystanku: "))
-            with open("stops_list.json", "r") as stops:
-                stops_data = json.load(stops)
-            for stop_name in stops_data:
-                if stop_name["stopName"] == user_stop_name:
-                    key_error = False
-                    self.stop_data = {
-                        "stopName": stop_name['stopName'],
-                        "stopId": stop_name['stopId'],
-                        "zoneId": stop_name['zoneId']
-                    }
-                    return
-            print("Nie znalezniono przystanku. Spróbuj ponownie")
+    def get_stop_data(self, user_stop_name):
+        with open("stops_list.json", "r") as stops:
+            stops_data = json.load(stops)
+        for stop_name in stops_data:
+            if stop_name["stopName"] == user_stop_name:
+                self.stop_data = {
+                    "stopName": stop_name['stopName'],
+                    "stopId": stop_name['stopId'],
+                    "zoneId": stop_name['zoneId']
+                }
+                return
 
     def stop_time_table(self):
         # Downlad full Time Table for selected stop

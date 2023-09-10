@@ -9,14 +9,27 @@ URL_STOP_TIMES = "http://api.zdiz.gdynia.pl/pt/stop_times"
 
 stop = StopSelecter(URL_STOPS, URL_STOP_TIMES)
 
+try:
+    import json
+    with open('stops_list.json', 'r', encoding='utf-8') as f:
+        stops_data = json.load(f)
+        stops_list = []
+        for specific_stop_data in stops_data:
+            stop_name = specific_stop_data.get("stopName")
+            stops_list.append(stop_name)
+            stops_list = sorted(stops_list)
+except FileNotFoundError:
+    stops_list = []
 
-@app.route("/")
+
+@app.route("/", methods=["GET", "POST"])
 def index():
+    result = []
     if request.method == "POST":
         selected_stop = request.form.get("selected_stop")
-        stop.get_stop_data(selected_stop)
-        stop.stop_time_table()
-        result = []
+        if selected_stop:
+            stop.get_stop_data(selected_stop)
+            stop.stop_time_table()
 
         for trip_id, trip_data in stop.timeTable.items():
             if len(trip_data) == 5:
@@ -37,9 +50,9 @@ def index():
                 }
                 result.append(entry)
 
-        return render_template("index.html", stops=stop.stop_data["stopName"], result=result)
+        return render_template("index.html", stops=stops_list, result=result)
 
-    stops = stop.stop_data["stopName"]
+    stops = stops_list
     return render_template("index.html", stops=stops)
 
 
