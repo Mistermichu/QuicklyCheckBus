@@ -6,7 +6,22 @@
         Quickly Check Your Bus - Gdynia
     </title>
     <style>
+        .trip_table {
+            border: 2px solid rgb(55, 142, 212);
+            width: 400px;
+            border-collapse: collapse;
+        }
 
+        .trip_table td,
+        .trip_table th {
+            border: 1px solid rgb(55, 142, 212);
+            padding: 8px;
+        }
+
+        .trip_table td:first-child,
+        .trip_table th:first-child {
+            width: 75px;
+        }
     </style>
 </head>
 
@@ -27,7 +42,7 @@
         {% for entry in result %}
         <div>
             {% if entry|length == 4 %}
-            <table border="1">
+            <table class="trip_table">
                 <tr>
                     <td rowspan="5">
                         Linia <br>
@@ -58,8 +73,9 @@
                     </td>
                 </tr>
             </table>
+            <br>
             {% else %}
-            <table border="1">
+            <table class="trip_table">
                 <tr>
                     <td rowspan="9">
                         Linia <br>
@@ -107,6 +123,7 @@
                     </td>
                 </tr>
             </table>
+            <br>
             {% endif %}
         </div>
         {% endfor %}
