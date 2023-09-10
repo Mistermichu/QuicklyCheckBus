@@ -5,6 +5,9 @@
     <title>
         Quickly Check Your Bus - Gdynia
     </title>
+    <style>
+
+    </style>
 </head>
 
 <body>
@@ -22,12 +25,90 @@
     </form>
     <ul>
         {% for entry in result %}
-        <li>
-            {{entry.linia}} - {{entry.kierunek}} - - {{entry.planowany_odjazd}}
-            {%if entry.status %}
-            - {{entry.status}}
+        <div>
+            {% if entry|length == 4 %}
+            <table border="1">
+                <tr>
+                    <td rowspan="5">
+                        Linia <br>
+                        {{entry.linia}}
+                    </td>
+                    <td>
+                        Kierunek
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{entry.kierunek}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{entry.status}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Planowany Odjazd
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{entry.planowany_odjazd}}
+                    </td>
+                </tr>
+            </table>
+            {% else %}
+            <table border="1">
+                <tr>
+                    <td rowspan="9">
+                        Linia <br>
+                        {{entry.linia}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Kierunek
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{entry.kierunek}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Planowany Odjazd
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{entry.planowany_odjazd}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rzeczywisty Czas Odjazdu
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{entry.rzeczywisty_czas_odjazdu}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Numer boczny pojazdu
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{entry.numer_boczny_pojazdu}}
+                    </td>
+                </tr>
+            </table>
             {% endif %}
-        </li>
+        </div>
         {% endfor %}
     </ul>
 </body>
