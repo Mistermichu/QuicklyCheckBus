@@ -62,9 +62,6 @@ class StopSelecter():
         # Exclude all trips not in service on specific day
         calendar_date = CalendarDates(URL_CALENDAR_DATES)
         today = datetime.date.today()
-        '''
-        today = datetime.date.today() + datetime.timedelta(days=1)
-        '''
         yesterday = today - datetime.timedelta(days=1)
         tomorrow = today + datetime.timedelta(days=1)
         today = str(today).replace("-", "")

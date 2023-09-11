@@ -17,13 +17,31 @@
             padding: 8px;
         }
 
-        .trip_table td:first-child,
-        .trip_table th:first-child {
+        .line_display {
             width: 75px;
+            background-color: rgb(55, 142, 212);
+            color: white;
+            font-weight: bold;
+            font-size: 32px;
+            text-align: center;
         }
 
-        .trip_table td:nth-child(2) {
+        .header_display {
             width: 325px;
+            background-color: rgb(55, 142, 212);
+            color: white;
+            font-weight: bold;
+        }
+
+        .dynamic_data_display {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .status_display {
+            background-color: rgb(197, 197, 197);
+            text-align: center;
+            font-style: italic;
         }
     </style>
 </head>
@@ -34,7 +52,7 @@
             Quickly Check Your Bus
         </h1>
     </center>
-    <hr style="color:rgb(55, 142, 212);">
+    <hr style="color:rgb(55, 142, 212); border-width: 2px; border-style: solid;">
     <form method="POST" action="/">
         <label for="selected_stop"> <b>Wybierz przystanek:</b></label>
         <select id="selected_stop" name="selected_stop">
@@ -59,32 +77,31 @@
                 {% if entry|length == 4 %}
                 <table class="trip_table">
                     <tr>
-                        <td rowspan="5"
-                            style="background-color: rgb(55, 142, 212); color: white; font-weight: bold; font-size: 32px; text-align: center;">
+                        <td rowspan="5" class="line_display">
                             Linia <br>
                             {{entry.linia}}
                         </td>
-                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                        <td class="header_display">
                             Kierunek
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; text-align: center;">
+                        <td class="dynamic_data_display">
                             {{entry.kierunek}}
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="status_display">
                             {{entry.status}}
                         </td>
                     </tr>
                     <tr>
-                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                        <td class="header_display">
                             Planowany Odjazd
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; text-align: center;">
+                        <td class="dynamic_data_display">
                             {{entry.planowany_odjazd}}
                         </td>
                     </tr>
@@ -93,49 +110,48 @@
                 {% else %}
                 <table class="trip_table">
                     <tr>
-                        <td rowspan="9"
-                            style="width: 75px; background-color: rgb(55, 142, 212); color: white; font-weight: bold; font-size: 32px; text-align: center;">
+                        <td rowspan="9" class="line_display">
                             Linia <br>
                             {{entry.linia}}
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 325px; background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                        <td class="header_display">
                             Kierunek
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; text-align: center;">
+                        <td class="dynamic_data_display">
                             {{entry.kierunek}}
                         </td>
                     </tr>
                     <tr>
-                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                        <td class="header_display">
                             Planowany Odjazd
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; text-align: center;">
+                        <td class="dynamic_data_display">
                             {{entry.planowany_odjazd}}
                         </td>
                     </tr>
                     <tr>
-                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                        <td class="header_display">
                             Rzeczywisty Czas Odjazdu
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; text-align: center;">
+                        <td class="dynamic_data_display">
                             {{entry.rzeczywisty_czas_odjazdu}}
                         </td>
                     </tr>
                     <tr>
-                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                        <td class="header_display">
                             Numer boczny pojazdu
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; text-align: center;">
+                        <td class="dynamic_data_display">
                             {{entry.numer_boczny_pojazdu}}
                         </td>
                     </tr>

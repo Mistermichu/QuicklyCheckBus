@@ -27,10 +27,6 @@ def assign_data(file_name):
 
 def exclude_trips(time_table):
     time_now = datetime.datetime.now()
-    '''
-    # Inser specific time for testing:
-    time_now = datetime.datetime(2023, 9, 9, 00, 30, 0)
-    '''
     time_plus_hour = time_now + datetime.timedelta(hours=1)
     trip_to_remove = []
     for trip_id, trip_data in time_table.items():
