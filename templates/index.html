@@ -7,14 +7,13 @@
     </title>
     <style>
         .trip_table {
-            border: 2px solid rgb(55, 142, 212);
-            width: 400px;
+            border: 2px solid rgb(0, 0, 0);
             border-collapse: collapse;
         }
 
         .trip_table td,
         .trip_table th {
-            border: 1px solid rgb(55, 142, 212);
+            border: 1px solid rgb(0, 0, 0);
             padding: 8px;
         }
 
@@ -22,109 +21,128 @@
         .trip_table th:first-child {
             width: 75px;
         }
+
+        .trip_table td:nth-child(2) {
+            width: 325px;
+        }
     </style>
 </head>
 
 <body>
-    <h1>
-        Rozkład Jazdy
-    </h1>
+    <center>
+        <h1>
+            Quickly Check Your Bus
+        </h1>
+    </center>
+    <hr style="color:rgb(55, 142, 212);">
     <form method="POST" action="/">
-        <label for="selected_stop">Wybierz przystanek:</label>
+        <label for="selected_stop"> <b>Wybierz przystanek:</b></label>
         <select id="selected_stop" name="selected_stop">
             {% for stop_name in stops %}
-            <option value="{{ stop_name }}">{{ stop_name }}</option>
+            <option value="{{ stop_name }}" {% if stop_name==selected_stop %}selected{% endif %}>{{ stop_name }}
+            </option>
             {% endfor %}
         </select>
         <button type="submit">Pokaż rozkład</button>
     </form>
+    <center>
+        <h1>
+            Rozkład Jazdy
+        </h1>
+        Odjazdy w przeciągu najbliższej godziny dla przystanku <b> {{selected_stop}} </b>. Ostatnia aktualizacja:
+        {{last_update}}
+    </center>
     <ul>
         {% for entry in result %}
         <div>
-            {% if entry|length == 4 %}
-            <table class="trip_table">
-                <tr>
-                    <td rowspan="5">
-                        Linia <br>
-                        {{entry.linia}}
-                    </td>
-                    <td>
-                        Kierunek
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{entry.kierunek}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{entry.status}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Planowany Odjazd
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{entry.planowany_odjazd}}
-                    </td>
-                </tr>
-            </table>
-            <br>
-            {% else %}
-            <table class="trip_table">
-                <tr>
-                    <td rowspan="9">
-                        Linia <br>
-                        {{entry.linia}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Kierunek
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{entry.kierunek}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Planowany Odjazd
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{entry.planowany_odjazd}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Rzeczywisty Czas Odjazdu
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{entry.rzeczywisty_czas_odjazdu}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Numer boczny pojazdu
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{entry.numer_boczny_pojazdu}}
-                    </td>
-                </tr>
-            </table>
-            <br>
-            {% endif %}
+            <center>
+                {% if entry|length == 4 %}
+                <table class="trip_table">
+                    <tr>
+                        <td rowspan="5"
+                            style="background-color: rgb(55, 142, 212); color: white; font-weight: bold; font-size: 32px; text-align: center;">
+                            Linia <br>
+                            {{entry.linia}}
+                        </td>
+                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                            Kierunek
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; text-align: center;">
+                            {{entry.kierunek}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{entry.status}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                            Planowany Odjazd
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; text-align: center;">
+                            {{entry.planowany_odjazd}}
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                {% else %}
+                <table class="trip_table">
+                    <tr>
+                        <td rowspan="9"
+                            style="width: 75px; background-color: rgb(55, 142, 212); color: white; font-weight: bold; font-size: 32px; text-align: center;">
+                            Linia <br>
+                            {{entry.linia}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 325px; background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                            Kierunek
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; text-align: center;">
+                            {{entry.kierunek}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                            Planowany Odjazd
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; text-align: center;">
+                            {{entry.planowany_odjazd}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                            Rzeczywisty Czas Odjazdu
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; text-align: center;">
+                            {{entry.rzeczywisty_czas_odjazdu}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: rgb(55, 142, 212); color: white; font-weight: bold;">
+                            Numer boczny pojazdu
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; text-align: center;">
+                            {{entry.numer_boczny_pojazdu}}
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                {% endif %}
+            </center>
         </div>
         {% endfor %}
     </ul>

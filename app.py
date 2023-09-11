@@ -25,11 +25,13 @@ except FileNotFoundError:
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = []
+    selected_stop = None
     if request.method == "POST":
         selected_stop = request.form.get("selected_stop")
         if selected_stop:
             stop.get_stop_data(selected_stop)
             stop.stop_time_table()
+            last_update = stop.updateTime
 
         for trip_id, trip_data in stop.timeTable.items():
             if len(trip_data) == 5:
@@ -50,7 +52,7 @@ def index():
                 }
                 result.append(entry)
 
-        return render_template("index.html", stops=stops_list, result=result)
+        return render_template("index.html", stops=stops_list, result=result, selected_stop=selected_stop, last_update=last_update)
 
     stops = stops_list
     return render_template("index.html", stops=stops)
